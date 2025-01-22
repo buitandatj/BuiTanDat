@@ -63,13 +63,7 @@ const WalletPage: React.FC<WalletPageProps> = ({ className }) => {
 };
 
 export default WalletPage;`;
-  const [copied, setCopied] = useState(false);
-  const handleCopy = () => {
-    setCopied(true);
-    if (copied) {
-      toast.success("Copied!");
-    }
-  };
+
   return (
     <div className="pt-[100rem] sm:pt-[70rem] w-full">
       <div className="pb-6">
@@ -114,7 +108,7 @@ export default WalletPage;`;
       </div>
       <CopyToClipboard
         text={code}
-        onCopy={handleCopy}
+        onCopy={() => toast.success("Copied!")}
         className="bg-linear-right w-full p-4 rounded-lg transition-colors text-white"
       >
         <button>Copy Code</button>

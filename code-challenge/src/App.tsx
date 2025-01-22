@@ -5,7 +5,7 @@ import { ToastContainer } from 'react-toastify';
 function App() {
   return (
     <>
-     <ToastContainer   position="top-center"  pauseOnFocusLoss
+     <ToastContainer   position="top-center" theme="dark"  pauseOnFocusLoss
           draggable
           pauseOnHover/>
       <Header />

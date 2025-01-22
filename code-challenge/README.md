@@ -1,4 +1,7 @@
-# React + TypeScript + Vite
+# BuiTanDat
+Code Challenge
+
+## React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
@@ -48,3 +51,32 @@ export default tseslint.config({
   },
 })
 ```
+
+## Project Structure
+
+- **src/**: Contains the main application code.
+  - **components/**: Reusable components.
+  - **pages/**: Different pages of the application.
+  - **assets/**: Static assets like images and SVGs.
+- **public/**: Publicly accessible files.
+- **.gitignore**: Specifies files and directories to ignore in version control.
+- **package.json**: Contains project metadata and dependencies.
+- **vite.config.ts**: Configuration file for Vite.
+- **tailwind.config.js**: Configuration for Tailwind CSS.
+- **tsconfig.json**: TypeScript configuration.
+
+## Getting Started
+
+1. Clone the repository.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+## License
+
+This project is licensed under the MIT License.
