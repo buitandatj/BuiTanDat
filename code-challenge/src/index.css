@@ -20,7 +20,7 @@ a {
   font-weight: 500;
   color: #fff;
   text-decoration: inherit;
-  font-size:1.2rem;
+  font-size: 1.2rem;
 }
 a:hover {
   color: #535bf2;
@@ -34,13 +34,12 @@ body {
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  height:100vh
+  height: 100vh;
 }
-
 
 .bg-linear-right {
   background: linear-gradient(to right, #808080, #000000);
@@ -48,11 +47,14 @@ body {
 .bg-linear-left {
   background: linear-gradient(to left, #808080, #000000);
 }
-button:disabled ,select:disabled {
+button:disabled,
+select:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
-
+.list-note li {
+  list-style-type: circle;
+}
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

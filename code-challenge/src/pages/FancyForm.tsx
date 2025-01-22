@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { CSSProperties, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import Select from "react-select";
+import Select, { GroupBase, StylesConfig } from "react-select";
 const url =
   "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false";
 interface Token {
@@ -104,7 +104,7 @@ const FancyForm = () => {
           value={fromToken}
           placeholder="Select from currency"
           className="w-full"
-          styles={customStyles}
+          styles={customStyles as unknown as StylesConfig<Token, false, GroupBase<Token>> | undefined}
           formatOptionLabel={formatOptionLabel}
         />
         <img
@@ -119,7 +119,7 @@ const FancyForm = () => {
           value={toToken}
           placeholder="Select to currency"
           className="w-full"
-          styles={customStyles}
+          styles={customStyles as unknown as StylesConfig<Token, false, GroupBase<Token>> | undefined}
           formatOptionLabel={formatOptionLabel}
         />
       </div>
