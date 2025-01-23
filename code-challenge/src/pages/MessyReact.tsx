@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -109,9 +109,8 @@ export default WalletPage;`;
       <CopyToClipboard
         text={code}
         onCopy={() => toast.success("Copied!")}
-        className="bg-linear-right w-full p-4 rounded-lg transition-colors text-white"
       >
-        <button>Copy Code</button>
+        <button className="bg-linear-right w-full p-4 rounded-lg transition-colors text-white">Copy Code</button>
       </CopyToClipboard>
     </div>
   );
