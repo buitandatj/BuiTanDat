@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { CSSProperties, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Select, { GroupBase, StylesConfig } from "react-select";
+import { toast } from "react-toastify";
 const url =
   "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false";
 interface Token {
@@ -21,12 +22,6 @@ interface IState {
 const FancyForm = () => {
   const location = useLocation();
   const [tokens, setTokens] = useState<Token[]>([]);
-  // const [fromToken, setFromToken] = useState<Token | null>(null);
-  // const [toToken, setToToken] = useState<Token | null>(null);
-  // const [amount, setAmount] = useState<number | null>(null);
-  // const [exchangeRate, setExchangeRate] = useState<number | null>(null);
-  // const [error, setError] = useState<string>("");
-  // const [loading, setLoading] = useState<boolean>(false);
   const [state, setState] = useState<IState>({
     fromToken: null,
     toToken: null,
@@ -86,8 +81,8 @@ const FancyForm = () => {
           ...pre,
           loading: false,
         }));
-      } catch (error) {
-        console.log("Error fetching data:", error);
+      } catch (error: unknown) {
+        toast.error("Error fetching data:", error);
       }
     };
     fetchTokens();
@@ -111,7 +106,6 @@ const FancyForm = () => {
       error: "",
     }));
     const rate = state.fromToken?.price / state.toToken?.price;
-
     setState((pre: IState) => ({
       ...pre,
       exchangeRate: rate * (pre.amount || 0),

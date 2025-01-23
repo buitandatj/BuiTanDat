@@ -1,23 +1,23 @@
-import React from 'react'
+import React, { Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Sum from '../pages/Sum';
-import FancyForm from '../pages/FancyForm';
-import MessyReact from '../pages/MessyReact';
+const Sum = React.lazy(() => import('../pages/Sum'));
+const FancyForm = React.lazy(() => import('../pages/FancyForm'));
+const MessyReact = React.lazy(() => import('../pages/MessyReact'));
 
 const AppRouter = () => {
   return (
     <Routes>
         <Route
             path={`/`}
-            element={<Sum/>}
+            element={<Suspense fallback={<div>Loading...</div>}><Sum/></Suspense>}
           />
              <Route
             path={`/fancy-form`}
-            element={<FancyForm/>}
+            element={<Suspense fallback={<div>Loading...</div>}><FancyForm/></Suspense>}
           />
              <Route
             path={`/messy-react`}
-            element={<MessyReact    />}
+            element={<Suspense fallback={<div>Loading...</div>}><MessyReact/></Suspense>}
           />
     </Routes>
   )
