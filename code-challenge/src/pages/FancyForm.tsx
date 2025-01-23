@@ -10,15 +10,31 @@ interface Token {
   price: number;
   image: string;
 }
+interface IState {
+  fromToken: Token | null;
+  toToken: Token | null;
+  amount: number | null;
+  exchangeRate: number | null;
+  error: string;
+  loading: boolean;
+}
 const FancyForm = () => {
   const location = useLocation();
   const [tokens, setTokens] = useState<Token[]>([]);
-  const [fromToken, setFromToken] = useState<Token | null>(null);
-  const [toToken, setToToken] = useState<Token | null>(null);
-  const [amount, setAmount] = useState<number | null>(null);
-  const [exchangeRate, setExchangeRate] = useState<number | null>(null);
-  const [error, setError] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  // const [fromToken, setFromToken] = useState<Token | null>(null);
+  // const [toToken, setToToken] = useState<Token | null>(null);
+  // const [amount, setAmount] = useState<number | null>(null);
+  // const [exchangeRate, setExchangeRate] = useState<number | null>(null);
+  // const [error, setError] = useState<string>("");
+  // const [loading, setLoading] = useState<boolean>(false);
+  const [state, setState] = useState<IState>({
+    fromToken: null,
+    toToken: null,
+    amount: null,
+    exchangeRate: null,
+    error: "",
+    loading: false,
+  });
   const customStyles: {
     menu: (provided: CSSProperties) => CSSProperties;
     option: (
@@ -46,7 +62,10 @@ const FancyForm = () => {
   };
   useEffect(() => {
     const fetchTokens = async () => {
-      setLoading(true);
+      setState((pre: IState) => ({
+        ...pre,
+        loading: true,
+      }));
       try {
         const response = await axios(url);
         const tokenOptions = response.data.map(
@@ -63,7 +82,10 @@ const FancyForm = () => {
           })
         );
         setTokens(tokenOptions);
-        setLoading(false);
+        setState((pre: IState) => ({
+          ...pre,
+          loading: false,
+        }));
       } catch (error) {
         console.log("Error fetching data:", error);
       }
@@ -72,18 +94,36 @@ const FancyForm = () => {
   }, [location]);
 
   const handleSwap = () => {
-    if (!amount || amount <= 0 || !fromToken || !toToken) {
-      setError("Please enter a valid amount and select both currencies.");
+    if (
+      !state.amount ||
+      state.amount <= 0 ||
+      !state.fromToken ||
+      !state.toToken
+    ) {
+      setState((pre: IState) => ({
+        ...pre,
+        error: "Please enter a valid amount and select both currencies.",
+      }));
       return;
     }
-    setError("");
-    const rate = fromToken?.price / toToken?.price;
-    setExchangeRate(rate * amount);
+    setState((pre: IState) => ({
+      ...pre,
+      error: "",
+    }));
+    const rate = state.fromToken?.price / state.toToken?.price;
+
+    setState((pre: IState) => ({
+      ...pre,
+      exchangeRate: rate * (pre.amount || 0),
+    }));
   };
 
   const handleSwapTokens = () => {
-    setFromToken(toToken);
-    setToToken(fromToken);
+    setState((pre: IState) => ({
+      ...pre,
+      fromToken: pre.toToken,
+      toToken: pre.fromToken,
+    }));
   };
 
   const formatOptionLabel = ({ label, image }: Token) => (
@@ -98,13 +138,23 @@ const FancyForm = () => {
       <h1 className="text-3xl font-bold pb-10">Currency Swap</h1>
       <div className="flex flex-col items-center gap-4 w-full">
         <Select
-          isDisabled={loading}
+          isDisabled={state.loading}
           options={tokens}
-          onChange={setFromToken}
-          value={fromToken}
+          onChange={(newValue) =>
+            setState((pre: IState) => ({
+              ...pre,
+              fromToken: newValue,
+              error: "",
+            }))
+          }
+          value={state.fromToken}
           placeholder="Select from currency"
           className="w-full"
-          styles={customStyles as unknown as StylesConfig<Token, false, GroupBase<Token>> | undefined}
+          styles={
+            customStyles as unknown as
+              | StylesConfig<Token, false, GroupBase<Token>>
+              | undefined
+          }
           formatOptionLabel={formatOptionLabel}
         />
         <img
@@ -113,36 +163,50 @@ const FancyForm = () => {
           onClick={handleSwapTokens}
         />
         <Select
-          isDisabled={loading}
+          isDisabled={state.loading}
           options={tokens}
-          onChange={setToToken}
-          value={toToken}
+          onChange={(newValue) =>
+            setState((pre: IState) => ({
+              ...pre,
+              toToken: newValue,
+              error: "",
+            }))
+          }
+          value={state.toToken}
           placeholder="Select to currency"
           className="w-full"
-          styles={customStyles as unknown as StylesConfig<Token, false, GroupBase<Token>> | undefined}
+          styles={
+            customStyles as unknown as
+              | StylesConfig<Token, false, GroupBase<Token>>
+              | undefined
+          }
           formatOptionLabel={formatOptionLabel}
         />
       </div>
       <input
         type="number"
-        value={amount || ""}
+        value={state.amount || ""}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setAmount(Number(e.target.value))
+          setState((pre: IState) => ({
+            ...pre,
+            amount: Number(e.target.value),
+            error: "",
+          }))
         }
         className="mt-4 w-full p-2 border rounded"
         placeholder="Enter amount"
       />
-      {error && <p className="text-red-500 mt-2">{error}</p>}
+      {state.error && <p className="text-red-500 mt-2">{state.error}</p>}
       <button
         onClick={handleSwap}
         className="mt-6 w-full bg-linear-right font-bold   text-white py-4 rounded  transition"
-        disabled={loading}
+        disabled={state.loading}
       >
-        {loading ? "Loading..." : "Swap"}
+        {state.loading ? "Loading..." : "Swap"}
       </button>
-      {exchangeRate && (
+      {state.exchangeRate && (
         <p className="mt-4 text-green-500 text-center text-2xl">
-          Exchange Rate: {exchangeRate.toFixed(2)}
+          Exchange Rate: {state.exchangeRate.toFixed(2)}
         </p>
       )}
     </div>
