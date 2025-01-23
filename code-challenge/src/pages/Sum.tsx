@@ -1,30 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const Sum = () => {
   const [tab, setTab] = useState<number | null>(1);
   const [number, setNumber] = useState<string | null>("");
   const [result, setResult] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleTab = (e: number) => {
     setTab(e);
     setNumber("");
     setResult(null);
+    setLoading(false);
   };
+
   const handleSum = (tab: number) => {
+    setLoading(true);
     const n = parseInt(number || "");
     let sum = 0;
     if (n < 0) {
       setResult(0);
+      setLoading(false);
       return;
     }
     switch (tab) {
       case 1:
-        if (n === 0) return sum = 0;
+        if (n === 0) {
+          sum = 0;
+          setLoading(false);
+          return;
+        }
         sum = (n * (n + 1)) / 2;
         break;
       case 2: {
         const recursiveSum = (num: number): number => {
-          if (num === 0) return 0;
+          if (num === 0) {
+            setLoading(false);
+            return 0;
+          }
           return num + recursiveSum(num - 1);
         };
         sum = recursiveSum(n);
@@ -40,7 +52,17 @@ const Sum = () => {
         sum = 0;
     }
     setResult(sum);
+    setLoading(false);
   };
+
+  useEffect(() => {
+    if (number && parseInt(number) > 1000000) {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
+  }, [number]);
 
   return (
     <div className="w-full mx-auto mt-8">
@@ -83,22 +105,24 @@ const Sum = () => {
           placeholder="Enter your number"
           className="bg-linear-left p-4 flex-1 border rounded-lg "
           value={number || ""}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-         {
-          setNumber(e.target.value)
-          setResult(null)
-         }
-          }
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setNumber(e.target.value);
+            setResult(null);
+            setLoading(false);
+          }}
         />
         <button
           className="bg-linear-right  p-4 rounded-lg  transition-colors text-white"
           onClick={() => handleSum(Number(tab))}
-          disabled={!number}
+          disabled={!number || loading}
         >
-          Sum ({tab})
+          {loading ? "Loading..." : `Sum (${tab})`}
         </button>
       </div>
-      <p className="mt-4 text-green-500 text-center text-2xl"> Result: {result}</p>
+      <p className="mt-4 text-green-500 text-center text-2xl">
+        {" "}
+        Result: {result}
+      </p>
     </div>
   );
 };
